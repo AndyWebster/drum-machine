@@ -57,13 +57,28 @@ class App extends Component {
       lastKey: "Press a key"
     };
     this.keyHandler = this.keyHandler.bind(this);
+    this.onKeyPressed = this.onKeyPressed.bind(this);
   }
   keyHandler(key) {
     this.setState({ lastKey: key });
+    let clip = document.getElementById(key);
+    clip.currentTime = 0;
+    clip.play();
   }
+  onKeyPressed(e) {
+    let myKey = e.key.toUpperCase();
+    if ("QWEASDZXC".includes(myKey)) {
+      this.keyHandler(myKey);
+    }
+  }
+
   render() {
     return (
-      <div className="App bg-dark container-fluid h-100 d-flex justify-content-center align-items-center">
+      <div
+        tabIndex="0"
+        onKeyPress={e => this.onKeyPressed(e)}
+        className="App bg-dark container-fluid h-100 d-flex justify-content-center align-items-center"
+      >
         <div id="drum-machine" className="p-3 d-flex flex-column border rounded ">
           <h1 className="text-light">Drum Machine</h1>
           <DisplayBox lastKey={this.state.lastKey} />
@@ -85,9 +100,6 @@ class DrumPads extends Component {
 const DrumButton = props => {
   let audioId = "audio" + props.id;
   let playSound = () => {
-    let clip = document.getElementById(props.id);
-    clip.currentTime = 0;
-    clip.play();
     props.handler(props.id);
   };
   return (
